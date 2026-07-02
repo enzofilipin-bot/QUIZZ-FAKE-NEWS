@@ -1,73 +1,91 @@
-// Banco de dados base de perguntas (Serão sorteadas infinitamente)
+// Banco de dados melhorado com quizzes realistas e desafiadores
 const quizDatabase = [
-    { text: "Cientistas criaram um tomate que brilha no escuro usando DNA de vaga-lume para facilitar a colheita noturna.", isFato: false },
-    { text: "A Grande Muralha da China não pode ser vista do espaço a olho nu por astronautas orbitando a Terra.", isFato: true },
-    { text: "A NASA confirmou que um asteroide feito inteiramente de ouro passará perto da Terra este ano.", isFato: false },
-    { text: "O WhatsApp passará a ser pago a partir do próximo mês se você não repassar uma mensagem para 20 contatos.", isFato: false },
-    { text: "Existe um lago no Senegal, chamado Lago Retba, que possui águas naturalmente cor-de-rosa devido a uma alga.", isFato: true },
-    { text: "Tomar banho gelado logo após comer causa congestão cerebral instantânea e fatal.", isFato: false },
-    { text: "Os camelos não guardam água em suas corcovas, mas sim gordura que serve como reserva de energia.", isFato: true },
-    { text: "Mastigar chiclete permanece no seu estômago por sete anos se você engoli-lo.", isFato: false },
-    { text: "Bananas são ligeiramente radioativas porque contêm altos níveis de potássio.", isFato: true },
-    { text: "A rede de fast-food McDonald's originalmente vendia cachorros-quentes, não hambúrgueres.", isFato: true }
+    { text: "Existe um tipo de fungo na Amazônia que consegue infectar formigas, assumir o controle de seus cérebros e transformá-las em 'zumbis'.", isFato: true },
+    { text: "Carregar o celular usando o notebook ou a entrada USB da TV queima a bateria do smartphone duas vezes mais rápido.", isFato: false },
+    { text: "A Coreia do Norte e a Finlândia são separadas geograficamente por apenas um único país: a Rússia.", isFato: true },
+    { text: "Comer sementes de melancia faz com que elas nasçam e cresçam dentro do seu estômago devido aos ácidos do corpo.", isFato: false },
+    { text: "O famoso 'estalo' que ouvimos ao puxar os dedos da mão não é o osso batendo, mas sim bolhas de gás explodindo nas articulações.", isFato: true },
+    { text: "Uma nova inteligência artificial conseguiu traduzir perfeitamente latidos de cachorros para frases em inglês.", isFato: false },
+    { text: "O mel de abelha legítimo é o único alimento do mundo que nunca estraga, podendo durar milhares de anos intacto.", isFato: true },
+    { text: "O deserto do Saara passa por um ciclo natural e, a cada 20 mil anos, ele se transforma completamente em uma floresta verdejante.", isFato: true },
+    { text: "Ler mensagens no celular no escuro antes de dormir emite uma radiação que altera permanentemente a cor da íris dos olhos.", isFato: false },
+    { text: "As impressões digitais dos coalas são tão parecidas com as dos humanos que podem facilmente confundir peritos em cenas de crimes.", isFato: true }
 ];
 
-// Ranking inicial padrão exibido na tela inicial
+// Competidores fictícios que simulam atividade ao vivo
 let leaderboard = [
-    { name: "CyberGamer", score: 25 },
-    { name: "FatoCheck", score: 18 },
-    { name: "Anti_Fake", score: 12 },
-    { name: "NerdMaster", score: 9 }
+    { name: "Alok_Check", score: 14 },
+    { name: "Bruna_Fatos", score: 11 },
+    { name: "Davi_AntiFake", score: 8 },
+    { name: "GamerVerdade", score: 5 }
 ];
 
 let currentUser = "";
 let currentScore = 0;
 let currentQuestion = null;
+let liveGameInterval = null; // Controla os bots jogando
 
-// Executa assim que a página termina de carregar
 window.onload = function() {
     renderRanking();
     simulateLiveStats();
+    startFakePlayersAction(); // Ativa os "jogadores falsos" progredindo
 };
 
-// Renderiza e ordena o Ranking na tela inicial
 function renderRanking() {
     const box = document.getElementById("ranking-box");
     if (!box) return;
     
     box.innerHTML = "";
-    // Ordena do maior para o menor placar
+    // Organiza do maior pontuador para o menor
     leaderboard.sort((a, b) => b.score - a.score);
     
     leaderboard.forEach((user, index) => {
+        let medal = `${index + 1}º`;
+        if (index === 0) medal = "🥇";
+        if (index === 1) medal = "🥈";
+        if (index === 2) medal = "🥉";
+
         box.innerHTML += `
-            <div class="ranking-item">
-                <span>${index + 1}º ${user.name}</span>
+            <div class="ranking-item" style="${user.name === currentUser ? 'color: var(--accent-cyan); font-weight: bold;' : ''}">
+                <span>${medal} ${user.name}</span>
                 <span style="color: gold;">${user.score} pts</span>
             </div>
         `;
     });
 }
 
-// Simula quantidade de usuários online e acessos ativos mudando dinamicamente
+// Faz com que os outros competidores fiquem ganhando pontos sozinhos para simular realidade
+function startFakePlayersAction() {
+    liveGameInterval = setInterval(() => {
+        // Escolhe um bot aleatório para subir de ponto de vez em quando
+        const randomBotIndex = Math.floor(Math.random() * leaderboard.length);
+        if (leaderboard[randomBotIndex].name !== currentUser) {
+            // Chance de 60% de ganhar 1 ponto a cada ciclo
+            if (Math.random() > 0.4) {
+                leaderboard[randomBotIndex].score += 1;
+                renderRanking();
+            }
+        }
+    }, 4000); // Roda a simulação a cada 4 segundos
+}
+
 function simulateLiveStats() {
-    let online = 142;
-    let visitas = 3410;
+    let online = 247;
+    let visitas = 8450;
     
     setInterval(() => {
-        online += Math.floor(Math.random() * 7) - 3; // Oscila os usuários online
-        visitas += Math.floor(Math.random() * 3);     // Aumenta os acessos totais
+        online += Math.floor(Math.random() * 9) - 4; 
+        visitas += Math.floor(Math.random() * 4);     
         
         document.getElementById("online-count").innerText = online;
         document.getElementById("total-visitas").innerText = visitas.toLocaleString();
-    }, 3000);
+    }, 2500);
 }
 
-// Inicia o Jogo após validação do nome
 function startGame() {
     const input = document.getElementById("username");
     if (input.value.trim() === "") {
-        alert("Por favor, digite um nome de usuário para jogar!");
+        alert("Por favor, digite um nome de usuário para iniciar!");
         return;
     }
     
@@ -77,52 +95,42 @@ function startGame() {
     document.getElementById("display-name").innerText = currentUser;
     document.getElementById("score").innerText = currentScore;
     
-    // Altera a exibição das telas
+    // Insere o jogador real na competição ativa
+    leaderboard.push({ name: currentUser, score: 0 });
+    
     document.getElementById("screen-login").classList.add("hidden");
     document.getElementById("screen-game").classList.remove("hidden");
     
     nextQuestion();
 }
 
-// Sorteia perguntas infinitas do banco de dados
 function nextQuestion() {
     document.getElementById("feedback-text").innerText = "";
     
-    // Escolhe um índice aleatório do banco de questões
     const randomIndex = Math.floor(Math.random() * quizDatabase.length);
     currentQuestion = quizDatabase[randomIndex];
     
     document.getElementById("question-text").innerText = currentQuestion.text;
 }
 
-// Verifica se a resposta clicada está certa ou errada
 function checkAnswer(playerChoice) {
     const feedback = document.getElementById("feedback-text");
     
     if (playerChoice === currentQuestion.isFato) {
         currentScore++;
         document.getElementById("score").innerText = currentScore;
-        feedback.innerText = "✨ Correto! Você somou +1 ponto.";
+        feedback.innerText = "✨ Resposta Correta! +1 Ponto.";
         feedback.style.color = "var(--correct-green)";
     } else {
-        feedback.innerText = "❌ Errado! Fique mais atento.";
+        feedback.innerText = "❌ Errado! Essa afirmação não confere.";
         feedback.style.color = "var(--wrong-red)";
     }
 
-    // Atualiza o ranking em tempo real caso o jogador alcance novas posições
-    updateLiveLeaderboard();
-
-    // Aguarda 2 segundos exibindo o resultado antes de mandar a próxima pergunta
-    setTimeout(nextQuestion, 2000);
-}
-
-// Atualiza ou insere a pontuação do jogador atual na lista de líderes
-function updateLiveLeaderboard() {
+    // Alinha os pontos do jogador no ranking global
     let userRecord = leaderboard.find(u => u.name === currentUser);
-    if (userRecord) {
-        userRecord.score = currentScore;
-    } else {
-        leaderboard.push({ name: currentUser, score: currentScore });
-    }
+    if (userRecord) userRecord.score = currentScore;
+    
     renderRanking();
+
+    setTimeout(nextQuestion, 2000);
 }
