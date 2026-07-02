@@ -1,9 +1,9 @@
 :root {
-    --bg-gradient: linear-gradient(135deg, #0f172a, #1e1b4b);
-    --card-bg: rgba(30, 41, 59, 0.7);
-    --accent-purple: #8b5cf6;
+    --bg-gradient: linear-gradient(135deg, #020617, #0f172a);
+    --card-bg: rgba(30, 41, 59, 0.4);
+    --accent-purple: #a855f7;
     --accent-cyan: #06b6d4;
-    --correct-green: #10b981;
+    --correct-green: #22c55e;
     --wrong-red: #ef4444;
     --text-main: #f8fafc;
 }
@@ -12,7 +12,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
@@ -26,144 +26,155 @@ body {
     padding: 20px;
 }
 
-/* Contadores no Canto Superior Direito */
+/* Painel de Status Online */
 .status-badge {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: rgba(15, 23, 42, 0.8);
-    padding: 12px 20px;
-    border-radius: 50px;
-    border: 1px solid var(--accent-cyan);
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+    background: rgba(15, 23, 42, 0.9);
+    padding: 15px 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     font-size: 0.9rem;
     font-weight: bold;
     z-index: 100;
+    backdrop-filter: blur(8px);
+}
+
+.status-online {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    align-items: center;
+    gap: 8px;
+    color: #e2e8f0;
 }
 
 .status-online::before {
     content: '';
-    display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: var(--correct-green);
     border-radius: 50%;
-    margin-right: 8px;
-    box-shadow: 0 0 8px var(--correct-green);
+    display: inline-block;
+    animation: pulse 2s infinite;
 }
 
-/* Container Principal do Quiz */
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* Container */
 .container {
     background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 40px;
     border-radius: 24px;
     width: 100%;
     max-width: 600px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     text-align: center;
-    transition: all 0.3s ease;
 }
 
 h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-size: 2.8rem;
+    margin-bottom: 15px;
     background: linear-gradient(to right, var(--accent-cyan), var(--accent-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    font-weight: 800;
 }
 
 p {
-    color: #cbd5e1;
+    color: #94a3b8;
     margin-bottom: 30px;
+    font-size: 1.05rem;
 }
 
-/* Campos de Entrada e Botões */
+/* Form */
 input[type="text"] {
     width: 100%;
-    padding: 15px 20px;
-    background: rgba(15, 23, 42, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    padding: 16px 20px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
     color: white;
     font-size: 1.1rem;
     margin-bottom: 20px;
     outline: none;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 input[type="text"]:focus {
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
 }
 
 button {
-    background: linear-gradient(to right, var(--accent-purple), #7c3aed);
+    background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
     color: white;
     border: none;
-    padding: 15px 35px;
+    padding: 16px 30px;
     font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 12px;
+    font-weight: 700;
+    border-radius: 14px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s;
     width: 100%;
 }
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 10px 20px rgba(168, 85, 247, 0.4);
 }
 
-/* Área de Ranking */
+/* Lista de Líderes */
 .ranking-list {
     text-align: left;
     margin: 20px 0;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 15px;
-    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.5);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .ranking-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-weight: 500;
 }
 
-.ranking-item:last-child { 
-    border: none; 
-}
+.ranking-item:last-child { border: none; }
 
-/* Controle de Telas */
-.hidden { 
-    display: none !important; 
-}
+.hidden { display: none !important; }
 
+/* Dashboard do Jogo */
 .score-board {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-/* Caixa da Pergunta */
-.question-box {
-    background: rgba(15, 23, 42, 0.4);
-    padding: 25px;
-    border-radius: 16px;
     margin-bottom: 25px;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    border-left: 5px solid var(--accent-cyan);
+    font-weight: 700;
+    font-size: 1.1rem;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 12px 20px;
+    border-radius: 12px;
 }
 
-/* Botões Fato e Fake */
+.question-box {
+    background: rgba(15, 23, 42, 0.7);
+    padding: 35px 25px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
 .options-zone {
     display: flex;
     gap: 20px;
@@ -171,24 +182,25 @@ button:hover {
 
 .btn-choice {
     flex: 1;
-    padding: 20px;
-    font-size: 1.3rem;
+    padding: 22px;
+    font-size: 1.4rem;
     border-radius: 16px;
     color: white;
     border: none;
     cursor: pointer;
-    transition: 0.2s;
+    font-weight: 800;
+    transition: all 0.2s;
 }
 
-.btn-fato { background: var(--correct-green); }
-.btn-fato:hover { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+.btn-fato { background: linear-gradient(135deg, #10b981, #059669); }
+.btn-fato:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); }
 
-.btn-fake { background: var(--wrong-red); }
-.btn-fake:hover { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+.btn-fake { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.btn-fake:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(239, 68, 68, 0.4); }
 
 .feedback {
-    margin-top: 20px;
+    margin-top: 25px;
     font-size: 1.2rem;
-    font-weight: bold;
-    min-height: 30px;
+    font-weight: 700;
+    min-height: 35px;
 }
