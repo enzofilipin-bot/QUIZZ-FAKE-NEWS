@@ -1,33 +1,364 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Quiz Fake News - Nível 30</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interativo: Fake ou Fato?</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a, #1e1b4b);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --correct-green: #10b981;
+            --wrong-red: #ef4444;
+            --text-main: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Contadores do Canto Superior Direito */
+        .status-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .status-online::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--correct-green);
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 8px var(--correct-green);
+        }
+
+        /* Container Principal */
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        /* Inputs e Botões */
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+
+        button {
+            background: linear-gradient(to right, var(--accent-purple), #7c3aed);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Ranking */
+        .ranking-list {
+            text-align: left;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .ranking-item:last-child { border: none; }
+
+        /* Tela do Quiz */
+        .hidden { display: none !important; }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .question-box {
+            background: rgba(15, 23, 42, 0.4);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            border-left: 5px solid var(--accent-cyan);
+        }
+
+        .options-zone {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-choice {
+            flex: 1;
+            padding: 20px;
+            font-size: 1.3rem;
+            border-radius: 16px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-fato { background: var(--correct-green); }
+        .btn-fato:hover { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+
+        .btn-fake { background: var(--wrong-red); }
+        .btn-fake:hover { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+
+        .feedback {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 30px;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-
-    <h1>🧠 QUIZ: FAKE NEWS</h1>
-
-    <div class="info">
-      <p id="nivel">Nível: 1 / 30</p>
-      <p id="score">Acertos: 0</p>
+    <div class="status-badge">
+        <div class="status-online"><span id="online-count">142</span> online agora</div>
+        <div style="color: #94a3b8; font-size: 0.8rem;">Total de acessos: <span id="total-visitas">1,240</span></div>
     </div>
 
-    <div class="quiz-box">
-      <h2 id="pergunta">Pergunta</h2>
+    <div id="screen-login" class="container">
+        <h1>Fake News Quiz</h1>
+        <p>Você consegue separar os fatos das mentiras da internet?</p>
+        
+        <input type="text" id="username" placeholder="Digite seu apelido/nome..." maxlength="15">
+        <button onclick="startGame()">Entrar no Quiz</button>
 
-      <div id="opcoes"></div>
-
-      <button onclick="proximaPergunta()">Próxima</button>
+        <h3 style="margin-top: 30px; text-align: left;">🏆 Top Líderes</h3>
+        <div class="ranking-list" id="ranking-box">
+            </div>
     </div>
 
-    <div id="resultadoFinal" class="hidden"></div>
+    <div id="screen-game" class="container hidden">
+        <div class="score-board">
+            <div>Jogador: <span id="display-name" style="color: var(--accent-cyan);">--</span></div>
+            <div>Pontuação: <span id="score" style="color: gold;">0</span></div>
+        </div>
 
-  </div>
+        <div class="question-box" id="question-text">
+            Carregando denúncia...
+        </div>
 
-  <script src="script.js"></script>
+        <div class="options-zone">
+            <button class="btn-choice btn-fato" onclick="checkAnswer(true)">FATO</button>
+            <button class="btn-choice btn-fake" onclick="checkAnswer(false)">FAKE</button>
+        </div>
+
+        <div class="feedback" id="feedback-text"></div>
+    </div>
+
+    <script>
+        // Banco de dados base de perguntas (Serão sorteadas infinitamente)
+        const quizDatabase = [
+            { text: "Cientistas criaram um tomate que brilha no escuro usando DNA de vaga-lume para facilitar a colheita noturna.", isFato: false },
+            { text: "A Grande Muralha da China não pode ser vista do espaço a olho nu por astronautas orbitando a Terra.", isFato: true },
+            { text: "A NASA confirmou que um asteroide feito inteiramente de ouro passará perto da Terra este ano.", isFato: false },
+            { text: "O WhatsApp passará a ser pago a partir do próximo mês se você não repassar uma mensagem para 20 contatos.", isFato: false },
+            { text: "Existe um lago no Senegal, chamado Lago Retba, que possui águas naturalmente cor-de-rosa devido a uma alga.", isFato: true },
+            { text: "Tomar banho gelado logo após comer causa congestão cerebral instantânea e fatal.", isFato: false },
+            { text: "Os camelos não guardam água em suas corcovas, mas sim gordura que serve como reserva de energia.", isFato: true },
+            { text: "Mastigar chiclete permanece no seu estômago por sete anos se você engoli-lo.", isFato: false },
+            { text: "Bananas são ligeiramente radioativas porque contêm altos níveis de potássio.", isFato: true },
+            { text: "A rede de fast-food McDonald's originalmente vendia cachorros-quentes, não hambúrgueres.", isFato: true }
+        ];
+
+        // Ranking fake inicial para preencher o placar
+        let leaderboard = [
+            { name: "CyberGamer", score: 25 },
+            { name: "FatoCheck", score: 18 },
+            { name: "Anti_Fake", score: 12 },
+            { name: "NerdMaster", score: 9 }
+        ];
+
+        let currentUser = "";
+        let currentScore = 0;
+        let currentQuestion = null;
+
+        // Inicializar a aplicação ao carregar a página
+        window.onload = function() {
+            renderRanking();
+            simulateLiveStats();
+        };
+
+        // Renderiza o Ranking na tela inicial
+        function renderRanking() {
+            const box = document.getElementById("ranking-box");
+            box.innerHTML = "";
+            // Ordenar por pontuação do maior para o menor
+            leaderboard.sort((a, b) => b.score - a.score);
+            
+            leaderboard.forEach((user, index) => {
+                box.innerHTML += `
+                    <div class="ranking-item">
+                        <span>${index + 1}º ${user.name}</span>
+                        <span style="color: gold;">${user.score} pts</span>
+                    </div>
+                `;
+            });
+        }
+
+        // Simula quantidade de usuários online aleatórios entrando no site
+        function simulateLiveStats() {
+            let online = 120;
+            let visitas = 3410;
+            
+            setInterval(() => {
+                online += Math.floor(Math.random() * 7) - 3; // oscila online
+                visitas += Math.floor(Math.random() * 3);     // sobe visitas
+                document.getElementById("online-count").innerText = online;
+                document.getElementById("total-visitas").innerText = visitas.toLocaleString();
+            }, 3000);
+        }
+
+        // Inicia o Jogo
+        function startGame() {
+            const input = document.getElementById("username");
+            if (input.value.trim() === "") {
+                alert("Por favor, digite um nome de usuário para jogar!");
+                return;
+            }
+            
+            currentUser = input.value.trim();
+            currentScore = 0;
+            
+            document.getElementById("display-name").innerText = currentUser;
+            document.getElementById("score").innerText = currentScore;
+            
+            // Troca de telas
+            document.getElementById("screen-login").classList.add("hidden");
+            document.getElementById("screen-game").classList.remove("hidden");
+            
+            nextQuestion();
+        }
+
+        // Gera perguntas de forma infinita
+        function nextQuestion() {
+            document.getElementById("feedback-text").innerText = "";
+            document.getElementById("feedback-text").style.color = "white";
+            
+            // Sorteia qualquer pergunta do banco infinitamente
+            const randomIndex = Math.floor(Math.random() * quizDatabase.length);
+            currentQuestion = quizDatabase[randomIndex];
+            
+            document.getElementById("question-text").innerText = currentQuestion.text;
+        }
+
+        // Verifica a resposta do jogador
+        function checkAnswer(playerChoice) {
+            const feedback = document.getElementById("feedback-text");
+            
+            if (playerChoice === currentQuestion.isFato) {
+                currentScore++;
+                document.getElementById("score").innerText = currentScore;
+                feedback.innerText = "✨ Correto! Você somou +1 ponto.";
+                feedback.style.color = "var(--correct-green)";
+            } else {
+                feedback.innerText = "❌ Errado! Fique mais atento.";
+                feedback.style.color = "var(--wrong-red)";
+            }
+
+            // Atualiza dinamicamente o ranking interno caso o jogador passe alguém
+            updateLiveLeaderboard();
+
+            // Bloqueia cliques rápidos e passa para a próxima pergunta infinita em 2 segundos
+            setTimeout(nextQuestion, 2000);
+        }
+
+        // Atualiza a posição do jogador no ranking em tempo real
+        function updateLiveLeaderboard() {
+            let userRecord = leaderboard.find(u => u.name === currentUser);
+            if (userRecord) {
+                userRecord.score = currentScore;
+            } else {
+                leaderboard.push({ name: currentUser, score: currentScore });
+            }
+            renderRanking();
+        }
+    </script>
 </body>
 </html>
