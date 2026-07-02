@@ -1,136 +1,222 @@
-// Banco de dados melhorado com quizzes realistas e desafiadores
-const quizDatabase = [
-    { text: "Existe um tipo de fungo na Amazônia que consegue infectar formigas, assumir o controle de seus cérebros e transformá-las em 'zumbis'.", isFato: true },
-    { text: "Carregar o celular usando o notebook ou a entrada USB da TV queima a bateria do smartphone duas vezes mais rápido.", isFato: false },
-    { text: "A Coreia do Norte e a Finlândia são separadas geograficamente por apenas um único país: a Rússia.", isFato: true },
-    { text: "Comer sementes de melancia faz com que elas nasçam e cresçam dentro do seu estômago devido aos ácidos do corpo.", isFato: false },
-    { text: "O famoso 'estalo' que ouvimos ao puxar os dedos da mão não é o osso batendo, mas sim bolhas de gás explodindo nas articulações.", isFato: true },
-    { text: "Uma nova inteligência artificial conseguiu traduzir perfeitamente latidos de cachorros para frases em inglês.", isFato: false },
-    { text: "O mel de abelha legítimo é o único alimento do mundo que nunca estraga, podendo durar milhares de anos intacto.", isFato: true },
-    { text: "O deserto do Saara passa por um ciclo natural e, a cada 20 mil anos, ele se transforma completamente em uma floresta verdejante.", isFato: true },
-    { text: "Ler mensagens no celular no escuro antes de dormir emite uma radiação que altera permanentemente a cor da íris dos olhos.", isFato: false },
-    { text: "As impressões digitais dos coalas são tão parecidas com as dos humanos que podem facilmente confundir peritos em cenas de crimes.", isFato: true }
+// Banco de dados com 15 perguntas de curiosidades sobre Fake News
+const questions = [
+    {
+        question: "Em qual século surgiu o termo 'Fake News' na imprensa escrita em inglês?",
+        options: [
+            { text: "No século XXI, com o avanço do Facebook.", correct: false },
+            { text: "No século XIX, por volta do final de 1890.", correct: true },
+            { text: "No século XV, logo após a invenção da imprensa de Gutenberg.", correct: false }
+        ]
+    },
+    {
+        question: "De acordo com um estudo do MIT, as notícias falsas se espalham com qual velocidade em relação às verdadeiras no Twitter?",
+        options: [
+            { text: "A mesma velocidade.", correct: false },
+            { text: "Duas vezes mais devagar.", correct: false },
+            { text: "Até seis vezes mais rápido.", correct: true }
+        ]
+    },
+    {
+        question: "Qual emoção humana as Fake News mais costumam despertar para viralizar tão rápido?",
+        options: [
+            { text: "Alegria e otimismo.", correct: false },
+            { text: "Surpresa e indignação/raiva.", correct: true },
+            { text: "Tristeza e melancolia.", correct: false }
+        ]
+    },
+    {
+        question: "O que significa o termo 'Deepfake'?",
+        options: [
+            { text: "Vídeos ou áudios alterados por Inteligência Artificial que parecem reais.", correct: true },
+            { text: "Textos jornalísticos extremamente longos e falsos.", correct: false },
+            { text: "Sites antigos que foram hackeados por criminosos.", correct: false }
+        ]
+    },
+    {
+        question: "Qual o nome dado a contas automatizadas que fingem ser pessoas reais para espalhar boatos na internet?",
+        options: [
+            { text: "Spammers.", correct: false },
+            { text: "Haters.", correct: false },
+            { text: "Bots (ou robôs).", correct: true }
+        ]
+    },
+    {
+        question: "Historicamente, qual imperador romano usou 'propaganda falsa' em moedas para difamar seu rival Marco Antônio?",
+        options: [
+            { text: "Otávio Augusto.", correct: true },
+            { text: "Nero.", correct: false },
+            { text: "Júlio César.", correct: false }
+        ]
+    },
+    {
+        question: "Qual dessas áreas costuma ser o maior alvo de desinformação no mundo?",
+        options: [
+            { text: "Saúde e Política.", correct: true },
+            { text: "Esportes e Entretenimento.", correct: false },
+            { text: "Cinema e Moda.", correct: false }
+        ]
+    },
+    {
+        question: "Em 1938, uma transmissão de rádio sobre uma 'invasão alienígena' gerou pânico nos EUA. Qual era o nome da obra?",
+        options: [
+            { text: "Guerra dos Mundos.", correct: true },
+            { text: "O Dia em que a Terra Parou.", correct: false },
+            { text: "Contatos Imediatos.", correct: false }
+        ]
+    },
+    {
+        question: "O que são as chamadas 'Agências de Fact-Checking'?",
+        options: [
+            { text: "Empresas que criam anúncios patrocinados.", correct: false },
+            { text: "Organizações focadas em checar e verificar se um boato é real ou falso.", correct: true },
+            { text: "Redes sociais focadas em imagens.", correct: false }
+        ]
+    },
+    {
+        question: "Qual o perigo da 'Bolha de Filtros' gerada pelos algoritmos das redes sociais?",
+        options: [
+            { text: "Mostrar apenas visões de mundo parecidas com a sua, facilitando a crença em Fake News.", correct: true },
+            { text: "Apagar fotos antigas do seu perfil.", correct: false },
+            { text: "Bloquear o acesso à internet em computadores públicos.", correct: false }
+        ]
+    },
+    {
+        question: "Qual termo técnico descreve a criação intencional de conteúdo falso para causar danos ou obter lucros?",
+        options: [
+            { text: "Misinformação.", correct: false },
+            { text: "Desinformação.", correct: true },
+            { text: "Malformação.", correct: false }
+        ]
+    },
+    {
+        question: "Por que as Fake News costumam imitar o design visual de portais de notícias famosos?",
+        options: [
+            { text: "Para confundir o leitor e parecerem fontes legítimas e confiáveis.", correct: true },
+            { text: "Porque os layouts são de código aberto.", correct: false },
+            { text: "Para economizar dinheiro com designers gráficos.", correct: false }
+        ]
+    },
+    {
+        question: "O fenômeno psicológico em que as pessoas tendem a acreditar em informações que confirmam suas próprias crenças chama-se:",
+        options: [
+            { text: "Efeito Amnésia.", correct: false },
+            { text: "Viés de Confirmação.", correct: true },
+            { text: "Dissonância Temporal.", correct: false }
+        ]
+    },
+    {
+        question: "Qual a melhor forma de combater a proliferação de boatos na internet?",
+        options: [
+            { text: "Ler apenas o título e repassar para os grupos.", correct: false },
+            { text: "Não compartilhar nada sem verificar a fonte e a data da publicação.", correct: true },
+            { text: "Discutir agressivamente nos comentários da publicação.", correct: false }
+        ]
+    },
+    {
+        question: "Sites satíricos (de humor) que inventam piadas em formato de notícias são considerados Fake News?",
+        options: [
+            { text: "Sim, porque mentir na internet é sempre crime.", correct: false },
+            { text: "Não, desde que fique claro o caráter humorístico, embora pessoas desatentas possam cair.", correct: true },
+            { text: "Sim, pois a comédia não é permitida no jornalismo.", correct: false }
+        ]
+    }
 ];
 
-// Competidores fictícios que simulam atividade ao vivo
-let leaderboard = [
-    { name: "Alok_Check", score: 14 },
-    { name: "Bruna_Fatos", score: 11 },
-    { name: "Davi_AntiFake", score: 8 },
-    { name: "GamerVerdade", score: 5 }
-];
+let currentQuestionIndex = 0;
+let score = 0;
 
-let currentUser = "";
-let currentScore = 0;
-let currentQuestion = null;
-let liveGameInterval = null; // Controla os bots jogando
+const questionElement = document.getElementById('question');
+const optionsContainer = document.getElementById('options');
+const nextButton = document.getElementById('next-button');
+const quizScreen = document.getElementById('quiz-screen');
+const scoreScreen = document.getElementById('score-screen');
+const finalScoreElement = document.getElementById('final-score');
+const restartButton = document.getElementById('restart-button');
 
-window.onload = function() {
-    renderRanking();
-    simulateLiveStats();
-    startFakePlayersAction(); // Ativa os "jogadores falsos" progredindo
-};
+function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    quizScreen.style.display = 'block';
+    scoreScreen.style.display = 'none';
+    nextButton.style.display = 'none';
+    showQuestion();
+}
 
-function renderRanking() {
-    const box = document.getElementById("ranking-box");
-    if (!box) return;
-    
-    box.innerHTML = "";
-    // Organiza do maior pontuador para o menor
-    leaderboard.sort((a, b) => b.score - a.score);
-    
-    leaderboard.forEach((user, index) => {
-        let medal = `${index + 1}º`;
-        if (index === 0) medal = "🥇";
-        if (index === 1) medal = "🥈";
-        if (index === 2) medal = "🥉";
+function showQuestion() {
+    resetState();
+    let currentQuestion = questions[currentQuestionIndex];
+    // Exibe também o número da pergunta atual (ex: 1/15)
+    questionElement.innerHTML = `<span style="color: #777; font-size: 0.9rem; display: block; margin-bottom: 5px;">Pergunta ${currentQuestionIndex + 1} de ${questions.length}</span>${currentQuestion.question}`;
 
-        box.innerHTML += `
-            <div class="ranking-item" style="${user.name === currentUser ? 'color: var(--accent-cyan); font-weight: bold;' : ''}">
-                <span>${medal} ${user.name}</span>
-                <span style="color: gold;">${user.score} pts</span>
-            </div>
-        `;
+    currentQuestion.options.forEach(option => {
+        const button = document.createElement('button');
+        button.innerText = option.text;
+        button.classList.add('option-btn');
+        if (option.correct) {
+            button.dataset.correct = option.correct;
+        }
+        button.addEventListener('click', selectOption);
+        optionsContainer.appendChild(button);
     });
 }
 
-// Faz com que os outros competidores fiquem ganhando pontos sozinhos para simular realidade
-function startFakePlayersAction() {
-    liveGameInterval = setInterval(() => {
-        // Escolhe um bot aleatório para subir de ponto de vez em quando
-        const randomBotIndex = Math.floor(Math.random() * leaderboard.length);
-        if (leaderboard[randomBotIndex].name !== currentUser) {
-            // Chance de 60% de ganhar 1 ponto a cada ciclo
-            if (Math.random() > 0.4) {
-                leaderboard[randomBotIndex].score += 1;
-                renderRanking();
-            }
-        }
-    }, 4000); // Roda a simulação a cada 4 segundos
-}
-
-function simulateLiveStats() {
-    let online = 247;
-    let visitas = 8450;
-    
-    setInterval(() => {
-        online += Math.floor(Math.random() * 9) - 4; 
-        visitas += Math.floor(Math.random() * 4);     
-        
-        document.getElementById("online-count").innerText = online;
-        document.getElementById("total-visitas").innerText = visitas.toLocaleString();
-    }, 2500);
-}
-
-function startGame() {
-    const input = document.getElementById("username");
-    if (input.value.trim() === "") {
-        alert("Por favor, digite um nome de usuário para iniciar!");
-        return;
+function resetState() {
+    nextButton.style.display = 'none';
+    while (optionsContainer.firstChild) {
+        optionsContainer.removeChild(optionsContainer.firstChild);
     }
-    
-    currentUser = input.value.trim();
-    currentScore = 0;
-    
-    document.getElementById("display-name").innerText = currentUser;
-    document.getElementById("score").innerText = currentScore;
-    
-    // Insere o jogador real na competição ativa
-    leaderboard.push({ name: currentUser, score: 0 });
-    
-    document.getElementById("screen-login").classList.add("hidden");
-    document.getElementById("screen-game").classList.remove("hidden");
-    
-    nextQuestion();
 }
 
-function nextQuestion() {
-    document.getElementById("feedback-text").innerText = "";
-    
-    const randomIndex = Math.floor(Math.random() * quizDatabase.length);
-    currentQuestion = quizDatabase[randomIndex];
-    
-    document.getElementById("question-text").innerText = currentQuestion.text;
-}
+function selectOption(e) {
+    const selectedBtn = e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
 
-function checkAnswer(playerChoice) {
-    const feedback = document.getElementById("feedback-text");
-    
-    if (playerChoice === currentQuestion.isFato) {
-        currentScore++;
-        document.getElementById("score").innerText = currentScore;
-        feedback.innerText = "✨ Resposta Correta! +1 Ponto.";
-        feedback.style.color = "var(--correct-green)";
+    if (isCorrect) {
+        selectedBtn.classList.add('correct');
+        score++;
     } else {
-        feedback.innerText = "❌ Errado! Essa afirmação não confere.";
-        feedback.style.color = "var(--wrong-red)";
+        selectedBtn.classList.add('wrong');
     }
 
-    // Alinha os pontos do jogador no ranking global
-    let userRecord = leaderboard.find(u => u.name === currentUser);
-    if (userRecord) userRecord.score = currentScore;
-    
-    renderRanking();
+    Array.from(optionsContainer.children).forEach(button => {
+        if (button.dataset.correct === "true") {
+            button.classList.add('correct');
+        }
+        button.disabled = true;
+    });
 
-    setTimeout(nextQuestion, 2000);
+    nextButton.style.display = 'block';
 }
+
+nextButton.addEventListener('click', () => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        showQuestion();
+    } else {
+        showScore();
+    }
+});
+
+function showScore() {
+    quizScreen.style.display = 'none';
+    scoreScreen.style.display = 'block';
+    
+    // Mensagem personalizada dependendo do rendimento do jogador
+    let mensagem = "";
+    if (score === questions.length) {
+        mensagem = "👑 Impressionante! Você é um mestre da checagem de fatos!";
+    } else if (score >= 10) {
+        mensagem = "🧠 Muito bem! Você conhece bastante sobre o assunto.";
+    } else if (score >= 5) {
+        mensagem = "⚠️ Atenção. Você conhece o básico, mas cuidado para não cair em boatos!";
+    } else {
+        mensagem = "🚨 Perigo! Você precisa se informar melhor para não ser enganado.";
+    }
+
+    finalScoreElement.innerHTML = `Você acertou <strong>${score}</strong> de <strong>${questions.length}</strong> perguntas.<br><br><span style="font-size: 1.1rem; color: #555;">${mensagem}</span>`;
+}
+
+restartButton.addEventListener('click', startQuiz);
+
+// Inicia o quiz automaticamente
+startQuiz();
